@@ -14,6 +14,20 @@ router.route('/').get((req, res) => {
 				.json('Error: ' + err));
 });
 
+
+// Get patient by ID
+router.route('/:id').get((req, res) => {
+    const id = req.params.id;
+    Patient.findById(id)
+        .then(patient => {
+            if (!patient) {
+                return res.status(404).json('Error: Patient not found');
+            }
+            res.json(patient);
+        })
+        .catch(err => res.status(400).json('Error: ' + err));
+});
+
 // Add new patient
 router.route('/add')
 	.post((req, res) => {
@@ -32,9 +46,8 @@ router.route('/add')
 // Update patient data
 router.route('/update/:id')
 	.post((req, res) => {
-		console.log('hihhhhiuhiihihiuhiuh');
 
-		Patient.findById(req.params.id)
+		Patient.findByIdAndUpdate(req.params.id)
 			.then(patient => {
 				if (!patient) {
 					return res.status(404)
